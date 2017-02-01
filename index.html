@@ -1,0 +1,160 @@
+<meta charset=utf-8>
+<title>TCI online</title>
+
+<link rel=stylesheet href=http://tci.anthropedia.org/static/css/app.css>
+<style>
+
+  main {
+    background-color: #fff;
+    border: 1px solid #bbb;
+    padding: 20px;
+  }
+
+  #legend {
+    display: flex;
+  }
+  #legend li {
+    display: block;
+    width: 20%;
+    height: 100px;
+    text-align: center;
+    border: 1px solid #999;
+  }
+  #legend li span {
+    display: block;
+    font-weight: bold;
+  }
+  #question {
+    display: flex;
+  }
+  #question h1 {
+    flex: auto;
+  }
+  #answers input[type=radio] {
+    display: none;
+  }
+  #answers label {
+    display: inline-block;
+    padding: 20px 25px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: lightblue;
+    transition: all .5s;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px white;
+  }
+  #answers label:nth-of-type(1) {
+    background-color: #9df;
+  }
+  #answers label:nth-of-type(2) {
+    background-color: #8ce;
+  }
+  #answers label:nth-of-type(3) {
+    background-color: #7bd;
+  }
+  #answers label:nth-of-type(4) {
+    background-color: #6ac;
+  }
+  #answers label:nth-of-type(5) {
+    background-color: #59b;
+  }
+  #answers label:hover {
+    background-color: #4b5;
+    color: white;
+    text-shadow: 1px 1px 1px black;
+  }
+  form button:not(.last) {
+    display: none;
+  }
+</style>
+
+
+<header>
+  <h1>
+    <a href="/">
+      <img src="https://tci.anthropedia.org/static/images/logo.png" alt="TCI, Temperament and Character Inventory" />
+    </a>
+  </h1>
+</header>
+
+<main>
+<ul id=legend>
+  <li><span>1</span>Absolutely false</li>
+  <li><span>2</span>Quite false</li>
+  <li><span>3</span>Neither true nor false</li>
+  <li><span>4</span>Quite true</li>
+  <li><span>5</span>Absolutely true</li>
+</ul>
+
+<section id=question>
+  <h1>[[question]]</h1>
+  <form method=post action="javascript:" id=answers>
+    <label for=answer-1 title="Absolutely false"><input id=answer-1 type=radio name=answer value=1>1</label>
+    <label for=answer-2 title="False"><input id=answer-2 type=radio name=answer value=2>2</label>
+    <label for=answer-3 title="Neither true nor false"><input id=answer-3 type=radio name=answer value=3>3</label>
+    <label for=answer-4 title="True"><input id=answer-4 type=radio name=answer value=4>4</label>
+    <label for=answer-5 title="Absolutely true"><input id=answer-5 type=radio name=answer value=5>5</label>
+    <button type=submit>Validate</button>
+  </form>
+</section>
+</main>
+
+<script>
+  const container = document.querySelector('#question')
+  const form = document.querySelector('form')
+  const template = container.innerHTML
+  const questions = ['question 1', 'question 2', 'question 3']
+  let index = 0
+  let time_start = 0
+  let answers = []
+  let timers = []
+
+  function showQuestion(index) {
+    time_start = (new Date()).getTime()
+    if(index >= questions.length) return
+    // dom content
+    let content = template
+    content = content.replace('[[question]]', questions[index])
+    if(index >= questions.length - 1) {
+    container.innerHTML = content
+      const button = container.querySelector('[type=submit]')
+      button.innerHTML = "Finish and submit"
+      button.classList.add('last')
+    }
+    // validate
+    form.addEventListener('submit', event => {
+      console.log('next question')
+      answers[index] = Number(event.target.answer.value)
+      timers[index] = (new Date()).getTime() - time_start
+      // next question
+      if(index < questions.length - 1) {
+        index++
+        showQuestion(index)
+      }
+    })
+  }
+  showQuestion(index)
+  ;[].map.call(document.querySelectorAll('#answers [type=radio]'), (answer, i) => {
+    answer.addEventListener('change', event => {
+      console.log('answered', event.target.value)
+      form.submit()
+    })
+  })
+  /*
+  function resetSelected() {
+    ;[].map.call(legends.querySelectorAll('.selected'), selected => {
+      selected.classList.remove('selected')
+    })
+  }
+  ;[].map.call(document.querySelectorAll('#answers label'), (answer, i) => {
+    answer.addEventListener('mouseover', event => {
+      resetSelected()
+      legend.querySelector(`:nth-child(${i+1})`).classList.add('selected')
+    })
+    answer.addEventListener('mouseout', event => {
+      resetSelected()
+    })
+  })
+  */
+</script>
