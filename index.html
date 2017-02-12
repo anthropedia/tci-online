@@ -4,6 +4,10 @@
 <link rel=stylesheet href=http://tci.anthropedia.org/static/css/app.css>
 <style>
 
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
   main {
     background-color: #fff;
     border: 1px solid #bbb;
@@ -29,6 +33,7 @@
   }
   #question h1 {
     flex: auto;
+    font-weight: normal;
   }
   #answers input[type=radio] {
     display: none;
@@ -64,8 +69,8 @@
     color: white;
     text-shadow: 1px 1px 1px black;
   }
-  form button:not(.last) {
-    display: none;
+  [hidden] {
+    display: none !important;
   }
 </style>
 
@@ -87,74 +92,71 @@
   <li><span>5</span>Absolutely true</li>
 </ul>
 
-<section id=question>
-  <h1>[[question]]</h1>
-  <form method=post action="javascript:" id=answers>
+<section id=question page hidden>
+  <h1></h1>
+  <form method=post id=answers>
     <label for=answer-1 title="Absolutely false"><input id=answer-1 type=radio name=answer value=1>1</label>
     <label for=answer-2 title="False"><input id=answer-2 type=radio name=answer value=2>2</label>
     <label for=answer-3 title="Neither true nor false"><input id=answer-3 type=radio name=answer value=3>3</label>
     <label for=answer-4 title="True"><input id=answer-4 type=radio name=answer value=4>4</label>
     <label for=answer-5 title="Absolutely true"><input id=answer-5 type=radio name=answer value=5>5</label>
-    <button type=submit>Validate</button>
   </form>
+</section>
+
+<section id=end page hidden>
+  <p>Your have completed this test.</p>
+  <p>Please see your provider to know more about your results.</p>
 </section>
 </main>
 
 <script>
   const container = document.querySelector('#question')
-  const form = document.querySelector('form')
-  const template = container.innerHTML
+  const titleTag = container.querySelector('h1')
   const questions = ['question 1', 'question 2', 'question 3']
   let index = 0
-  let time_start = 0
-  let answers = []
-  let timers = []
+  let startTime = 0
+  const answers = []
+  const timers = []
+  const clickDelay = 500
 
-  function showQuestion(index) {
-    time_start = (new Date()).getTime()
-    if(index >= questions.length) return
-    // dom content
-    let content = template
-    content = content.replace('[[question]]', questions[index])
-    if(index >= questions.length - 1) {
-    container.innerHTML = content
-      const button = container.querySelector('[type=submit]')
-      button.innerHTML = "Finish and submit"
-      button.classList.add('last')
-    }
-    // validate
-    form.addEventListener('submit', event => {
-      console.log('next question')
-      answers[index] = Number(event.target.answer.value)
-      timers[index] = (new Date()).getTime() - time_start
-      // next question
-      if(index < questions.length - 1) {
-        index++
-        showQuestion(index)
-      }
-    })
-  }
-  showQuestion(index)
+  let form = container.querySelector('form')
+  // Form submit
+  form.addEventListener('next', event => {
+    answers[index] = Number(event.target.answer.value)
+    timers[index] = (new Date()).getTime() - startTime
+    index++
+    step(index)
+  })
+
+  // Click answer to submit
   ;[].map.call(document.querySelectorAll('#answers [type=radio]'), (answer, i) => {
     answer.addEventListener('change', event => {
-      console.log('answered', event.target.value)
-      form.submit()
+      if((new Date()).getTime() - startTime < clickDelay) return
+      form.dispatchEvent(new Event('next'))
     })
   })
-  /*
-  function resetSelected() {
-    ;[].map.call(legends.querySelectorAll('.selected'), selected => {
-      selected.classList.remove('selected')
-    })
+
+  function step(index) {
+    // prevent exceeds
+    if(index >= questions.length) {
+      end()
+    }
+    // reset counter and display
+    startTime = (new Date()).getTime()
+    titleTag.textContent = questions[index]
+    form.reset()
   }
-  ;[].map.call(document.querySelectorAll('#answers label'), (answer, i) => {
-    answer.addEventListener('mouseover', event => {
-      resetSelected()
-      legend.querySelector(`:nth-child(${i+1})`).classList.add('selected')
-    })
-    answer.addEventListener('mouseout', event => {
-      resetSelected()
-    })
-  })
-  */
+
+  function end() {
+    showPage('end')
+  }
+
+  step(index)
+
+  function showPage(id) {
+    document.querySelector('[page]').setAttribute('hidden', true)
+    document.querySelector('[page]#'+id).removeAttribute('hidden')
+  }
+
+  showPage('question')
 </script>
