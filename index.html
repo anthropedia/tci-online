@@ -8,6 +8,17 @@
   body {
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
   }
+  html::after {
+    content: "";
+    background: url(/images/birds1.svg) no-repeat;
+    opacity: .1;
+    top: 1%;
+    right: 1%;
+    position: absolute;
+    z-index: -1;
+    height: 100%;
+    width: 200px;
+  }
 
   header h1,
   header h2 {
@@ -22,7 +33,7 @@
   }
 
   main {
-    background-color: #fff;
+    background-color: #ffffffee;
     border: 1px solid #bbb;
     padding: 20px;
   }
