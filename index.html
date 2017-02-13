@@ -118,10 +118,11 @@
 </main>
 
 <script>
+  const apiURL = 'http://api.tci.anthropedia.org'
   const container = document.querySelector('#question')
   const titleTag = container.querySelector('h1')
   const counterTag = container.querySelector('#counter')
-  const questions = ['question 1', 'question 2', 'question 3']
+  let questions = []
   let index = 0
   let startTime = 0
   const answers = []
@@ -161,12 +162,20 @@
     showPage('end')
   }
 
-  step(index)
-
   function showPage(id) {
     document.querySelector('[page]').setAttribute('hidden', true)
     document.querySelector('[page]#'+id).removeAttribute('hidden')
   }
 
-  showPage('question')
+  function ready() {
+    step(index)
+    showPage('question')
+  }
+
+  fetch(`${apiURL}/questions`)
+  .then(response => response.json())
+  .then(questionsResponse => {
+    questions = questionsResponse
+    ready()
+  })
 </script>
