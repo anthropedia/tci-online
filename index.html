@@ -184,6 +184,7 @@
 </section>
 </main>
 
+<script src="https://cdn.rawgit.com/github/fetch/a9066beb/fetch.js"></script>
 <script>
   const apiURL = 'http://api.tci.anthropedia.org'
   const container = document.querySelector('#question')
@@ -192,7 +193,7 @@
   let questions = []
   let index = 0
   let startTime = 0
-  const answers = []
+  var answers = []  // const/var for 'answers' crashes webkit (bug https://bugs.webkit.org/show_bug.cgi?id=159270)  # noqa
   const timers = []
   const clickDelay = 500
 
