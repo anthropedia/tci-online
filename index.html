@@ -29,7 +29,6 @@
     width: 200px;
   }
 
-
   header h1,
   header h2 {
     font-weight: 100;
@@ -209,7 +208,10 @@
   // Click answer to submit
   ;[].map.call(document.querySelectorAll('#answers [type=radio]'), (answer, i) => {
     answer.addEventListener('change', event => {
-      if((new Date()).getTime() - startTime < clickDelay) return
+      if((new Date()).getTime() - startTime < clickDelay) {
+        form.reset()
+        return
+      }
       form.dispatchEvent(new Event('next'))
     })
   })
