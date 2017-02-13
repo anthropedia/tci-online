@@ -1,52 +1,8 @@
 <meta charset=utf-8>
 <title>TCI online</title>
 
-<link rel=stylesheet href=http://tci.anthropedia.org/static/css/app.css>
+<link rel=stylesheet href="http://assets.tci.anthropedia.org/css/layout.css">
 <style>
-  @import url('https://fonts.googleapis.com/css?family=Open+Sans');
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    font-family: "Open Sans", Arial, Helvetica, sans-serif;
-  }
-  html {
-    border-top: 5px solid #c9ba97;
-    border-bottom: 50px solid #c9ba97;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-  }
-  html::after {
-    content: "";
-    background: url(/images/birds1.svg) no-repeat;
-    opacity: .1;
-    top: 1%;
-    right: 1%;
-    position: absolute;
-    z-index: -1;
-    height: 100%;
-    width: 200px;
-  }
-
-  header h1,
-  header h2 {
-    font-weight: 100;
-    text-transform: uppercase;
-    margin: .2em;
-    line-height: .7em;
-    font-size: 1.5em;
-  }
-  header h2 {
-    font-size: .7em;
-  }
-
-  main {
-    background-color: rgba(255,255,255,.88);
-    border: 1px solid #bbb;
-    padding: 20px;
-  }
-
   #question {
     position: relative;
     min-height: 100px;
@@ -54,18 +10,18 @@
 
   #legend {
     display: flex;
+    padding-bottom: 2em;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 2em;
   }
   #legend li {
     display: block;
     width: 20%;
     min-height: 100px;
     text-align: center;
-    border: 1px solid #999;
-    padding: 1em;
+    padding: .5em 1em;
     line-height: 1.4em;
-  }
-  #legend li:not(:first-of-type) {
-    border-left: none;
+    font-size: .9em;
   }
   #legend li span {
     display: block;
@@ -82,8 +38,9 @@
     display: inline-block;
     width: calc(100% - 240px);
     font-weight: normal;
-    font-size: 1.5em;
+    font-size: 1.4em;
     padding-right: 1em;
+    margin: 0;
   }
 
   #answers {
@@ -102,14 +59,14 @@
     vertical-align: middle;
     background-color: lightblue;
     font-weight: bold;
-    text-shadow: 1px 1px 1px #00000099;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
     color: white;
+    margin-bottom: .3em;
   }
   #answers label {
     display: inline-block;
-    padding: 10px 15px;
+    padding: 8px 15px;
     transition: background-color .5s;
-    font-size: 1.3em;
   }
   #answers label:nth-of-type(1),
   #legend li:nth-of-type(1) span {
@@ -159,21 +116,21 @@
 
 <main>
 <ul id=legend>
-  <li><span>1</span>Absolutely false</li>
-  <li><span>2</span>Probably or mostly false</li>
+  <li><span>1</span>Definitely false</li>
+  <li><span>2</span>Mostly or Probably False</li>
   <li><span>3</span>Neither true nor false, or about the same</li>
-  <li><span>4</span>Probably or mostly true</li>
-  <li><span>5</span>Absolutely true</li>
+  <li><span>4</span>Mostly or Probably True</li>
+  <li><span>5</span>Definitely True</li>
 </ul>
 
 <section id=question page hidden>
   <h1></h1>
   <form method=post id=answers>
-    <label for=answer-1 title="Absolutely false"><input id=answer-1 type=radio name=answer value=1>1</label>
-    <label for=answer-2 title="Probably or mostly false"><input id=answer-2 type=radio name=answer value=2>2</label>
+    <label for=answer-1 title="Definitely false"><input id=answer-1 type=radio name=answer value=1>1</label>
+    <label for=answer-2 title="Mostly or Probably False"><input id=answer-2 type=radio name=answer value=2>2</label>
     <label for=answer-3 title="Neither true nor false, or about the same"><input id=answer-3 type=radio name=answer value=3>3</label>
-    <label for=answer-4 title="Probably or mostly true"><input id=answer-4 type=radio name=answer value=4>4</label>
-    <label for=answer-5 title="Absolutely true"><input id=answer-5 type=radio name=answer value=5>5</label>
+    <label for=answer-4 title="Mostly or Probably True"><input id=answer-4 type=radio name=answer value=4>4</label>
+    <label for=answer-5 title="Definitely True"><input id=answer-5 type=radio name=answer value=5>5</label>
   </form>
   <div id=counter></div>
 </section>
