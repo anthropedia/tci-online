@@ -3,9 +3,22 @@
 
 <link rel=stylesheet href=http://tci.anthropedia.org/static/css/app.css>
 <style>
+  @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
   body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+  }
+
+  header h1,
+  header h2 {
+    font-weight: 100;
+    text-transform: uppercase;
+    margin: .2em;
+    line-height: .7em;
+    font-size: 1.5em;
+  }
+  header h2 {
+    font-size: .7em;
   }
 
   main {
@@ -14,64 +27,97 @@
     padding: 20px;
   }
 
+  #question {
+    position: relative;
+    min-height: 100px;
+  }
+
   #legend {
     display: flex;
   }
   #legend li {
     display: block;
     width: 20%;
-    height: 100px;
+    min-height: 100px;
     text-align: center;
     border: 1px solid #999;
+    padding: 1em;
+    line-height: 1.4em;
+  }
+  #legend li:not(:first-of-type) {
+    border-left: none;
   }
   #legend li span {
     display: block;
-    font-weight: bold;
+    text-align: center;
+    width: 35px;
+    height: 32px;
+    padding: 4px;
+    margin: 0 auto;
+    font-size: 1.1em;
   }
+
   #question h1 {
+    font-family: inherit;
     display: inline-block;
-    width: calc(100% - 340px);
+    width: calc(100% - 240px);
     font-weight: normal;
+    font-size: 1.5em;
+    padding-right: 1em;
   }
+
   #answers {
     display: inline-block;
-    width: 335px;
+    width: 235px;
+    vertical-align: top;
+    margin-top: 12px;
   }
   #answers input[type=radio] {
     display: none;
   }
-  #answers label {
-    display: inline-block;
-    padding: 20px 25px;
+
+  #answers label,
+  #legend li span {
     text-align: center;
     vertical-align: middle;
     background-color: lightblue;
-    transition: all .5s;
-    font-size: 1.5em;
     font-weight: bold;
-    text-shadow: 1px 1px 1px white;
+    text-shadow: 1px 1px 1px #00000099;
+    color: white;
   }
-  #answers label:nth-of-type(1) {
+  #answers label {
+    display: inline-block;
+    padding: 10px 15px;
+    transition: background-color .5s;
+    font-size: 1.3em;
+  }
+  #answers label:nth-of-type(1),
+  #legend li:nth-of-type(1) span {
     background-color: #9df;
   }
-  #answers label:nth-of-type(2) {
+  #answers label:nth-of-type(2),
+  #legend li:nth-of-type(2) span {
     background-color: #8ce;
   }
-  #answers label:nth-of-type(3) {
+  #answers label:nth-of-type(3),
+  #legend li:nth-of-type(3) span {
     background-color: #7bd;
   }
-  #answers label:nth-of-type(4) {
+  #answers label:nth-of-type(4),
+  #legend li:nth-of-type(4) span {
     background-color: #6ac;
   }
-  #answers label:nth-of-type(5) {
+  #answers label:nth-of-type(5),
+  #legend li:nth-of-type(5) span {
     background-color: #59b;
   }
   #answers label:hover {
     background-color: #4b5;
-    color: white;
-    text-shadow: 1px 1px 1px black;
   }
   #counter {
+    position: absolute;
+    top: 70px;
+    right: 10px;
     font-size: .9em;
     text-align: right;
     font-style: italic;
@@ -85,7 +131,8 @@
 <header>
   <h1>
     <a href="/">
-      <img src="https://tci.anthropedia.org/static/images/logo.png" alt="TCI, Temperament and Character Inventory" />
+      <h1>TCI</h1>
+      <h2>Temperament & Character Inventory</h2>
     </a>
   </h1>
 </header>
@@ -93,9 +140,9 @@
 <main>
 <ul id=legend>
   <li><span>1</span>Absolutely false</li>
-  <li><span>2</span>Quite false</li>
-  <li><span>3</span>Neither true nor false</li>
-  <li><span>4</span>Quite true</li>
+  <li><span>2</span>Probably or mostly false</li>
+  <li><span>3</span>Neither true nor false, or about the same</li>
+  <li><span>4</span>Probably or mostly true</li>
   <li><span>5</span>Absolutely true</li>
 </ul>
 
@@ -103,9 +150,9 @@
   <h1></h1>
   <form method=post id=answers>
     <label for=answer-1 title="Absolutely false"><input id=answer-1 type=radio name=answer value=1>1</label>
-    <label for=answer-2 title="False"><input id=answer-2 type=radio name=answer value=2>2</label>
-    <label for=answer-3 title="Neither true nor false"><input id=answer-3 type=radio name=answer value=3>3</label>
-    <label for=answer-4 title="True"><input id=answer-4 type=radio name=answer value=4>4</label>
+    <label for=answer-2 title="Probably or mostly false"><input id=answer-2 type=radio name=answer value=2>2</label>
+    <label for=answer-3 title="Neither true nor false, or about the same"><input id=answer-3 type=radio name=answer value=3>3</label>
+    <label for=answer-4 title="Probably or mostly true"><input id=answer-4 type=radio name=answer value=4>4</label>
     <label for=answer-5 title="Absolutely true"><input id=answer-5 type=radio name=answer value=5>5</label>
   </form>
   <div id=counter></div>
