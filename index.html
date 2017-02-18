@@ -1,7 +1,8 @@
 <meta charset=utf-8>
 <title>TCI online</title>
 
-<link rel=stylesheet href="//assets.tci.anthropedia.org/css/layout.css">
+<link rel=stylesheet href="https://assets.tci.anthropedia.org/css/layout.css">
+<!--<link rel=stylesheet href="//localhost:8081/css/layout.css">-->
 <style>
   #question {
     position: relative;
@@ -199,7 +200,7 @@
     showPage('question')
   }
 
-  fetch(`${apiURL}/questions`)
+  fetch(`${apiURL}/survey/tci3240/questions`)
   .then(response => response.json())
   .then(questionsResponse => {
     questions = questionsResponse
