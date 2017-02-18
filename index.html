@@ -4,6 +4,23 @@
 <link rel=stylesheet href="https://assets.tci.anthropedia.org/css/layout.css">
 <!--<link rel=stylesheet href="//localhost:8081/css/layout.css">-->
 <style>
+  button {
+    padding: .5em 1.2em;
+    font-size: 1em;
+    background-color: #5a93d4;
+    color: white;
+    text-shadow: 1px 1px solid #333;
+    border: none;
+    border-radius: .2em;
+    display: block;
+    cursor: pointer;
+  }
+  #home {
+    text-align: center;
+  }
+  #home button {
+    margin: 0 auto;
+  }
   #question {
     position: relative;
     min-height: 100px;
@@ -39,7 +56,7 @@
     display: inline-block;
     width: calc(100% - 240px);
     font-weight: normal;
-    font-size: 1.4em;
+    font-size: 1.25em;
     padding-right: 1em;
     margin: 0;
   }
@@ -115,29 +132,41 @@
 </header>
 
 <main>
-<ul id=legend>
-  <li><span>1</span>Definitely false</li>
-  <li><span>2</span>Mostly or Probably False</li>
-  <li><span>3</span>Neither true nor false, or about the same</li>
-  <li><span>4</span>Mostly or Probably True</li>
-  <li><span>5</span>Definitely True</li>
-</ul>
 
-<section id=question page hidden>
-  <h1></h1>
-  <form method=post id=answers>
-    <label for=answer-1 title="Definitely false"><input id=answer-1 type=radio name=answer value=1>1</label>
-    <label for=answer-2 title="Mostly or Probably False"><input id=answer-2 type=radio name=answer value=2>2</label>
-    <label for=answer-3 title="Neither true nor false, or about the same"><input id=answer-3 type=radio name=answer value=3>3</label>
-    <label for=answer-4 title="Mostly or Probably True"><input id=answer-4 type=radio name=answer value=4>4</label>
-    <label for=answer-5 title="Definitely True"><input id=answer-5 type=radio name=answer value=5>5</label>
-  </form>
-  <div id=counter></div>
+<section id=home hidden page>
+  <h1>Welcome to the TCI online</h1>
+  <button onclick="javascript:showPage('survey')">Begin</button>
+</section>
+
+<section id=survey page hidden>
+  <ul id=legend>
+    <li><span>1</span>Definitely false</li>
+    <li><span>2</span>Mostly or Probably False</li>
+    <li><span>3</span>Neither true nor false, or about the same</li>
+    <li><span>4</span>Mostly or Probably True</li>
+    <li><span>5</span>Definitely True</li>
+  </ul>
+  <section id=question>
+    <h1></h1>
+    <form method=post id=answers>
+      <label for=answer-1 title="Definitely false"><input id=answer-1 type=radio name=answer value=1>1</label>
+      <label for=answer-2 title="Mostly or Probably False"><input id=answer-2 type=radio name=answer value=2>2</label>
+      <label for=answer-3 title="Neither true nor false, or about the same"><input id=answer-3 type=radio name=answer value=3>3</label>
+      <label for=answer-4 title="Mostly or Probably True"><input id=answer-4 type=radio name=answer value=4>4</label>
+      <label for=answer-5 title="Definitely True"><input id=answer-5 type=radio name=answer value=5>5</label>
+    </form>
+    <div id=counter></div>
+  </section>
 </section>
 
 <section id=end page hidden>
   <p>Your have completed this test.</p>
   <p>Please refer to your provider to know more about your results.</p>
+</section>
+
+<section id=error page hidden>
+  <h1>The test could not loaded</h1>
+  <p>Make sure the link provided is valid and the test has not been completed already</p>
 </section>
 </main>
 
@@ -147,6 +176,9 @@
   const container = document.querySelector('#question')
   const titleTag = container.querySelector('h1')
   const counterTag = container.querySelector('#counter')
+  const tokenKey = ''
+  let surveyType = ''
+  let params = {}
   let questions = []
   let index = 0
   let startTime = 0
@@ -195,15 +227,26 @@
     document.querySelector('[page]#'+id).removeAttribute('hidden')
   }
 
-  function ready() {
-    step(index)
-    showPage('question')
-  }
+  // Read URL query params
+  document.location.search.substr(1).split('&').forEach(pair => {
+    [key, value] = pair.split('=')
+    params[key] = value
+  })
 
-  fetch(`${apiURL}/survey/tci3240/questions`)
+  fetch(`${apiURL}/credit/survey/${params.token}`)
+  .then(response => response.json())
+  .then(token => {
+    if(token.error) throw token.error
+    return fetch(`${apiURL}/survey/${token.type}/questions`)
+  })
   .then(response => response.json())
   .then(questionsResponse => {
     questions = questionsResponse
-    ready()
+    step(index)
+    showPage('home')
+  })
+  .catch(e => {
+    showPage('error')
+    console.error(e)
   })
 </script>
