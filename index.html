@@ -165,7 +165,8 @@
 
 <section id=error page hidden>
   <h1>The test could not load.</h1>
-  <p>Make sure the link provided is valid and the test has not been completed already.</p>
+  <p>Make sure the link provided is valid and the test has not been completed previously.</p>
+  <p>details: {error}</p>
 </section>
 </main>
 
@@ -178,16 +179,18 @@
   let params = {}
   let index = 0
   let startTime = 0
-  let questions = []
-  var answers = []  // const/var for 'answers' crashes webkit as it matches the #answers (bug https://bugs.webkit.org/show_bug.cgi?id=159270)
-  let timers = []
   const clickDelay = 500
+  const data = {
+    questions: [],
+    answers: [],
+    times: []
+  }
 
   let form = container.querySelector('form')
   // Form submit
   form.addEventListener('next', event => {
-    answers[index] = Number(event.target.answer.value)
-    timers[index] = (new Date()).getTime() - startTime
+    data.answers[index] = Number(event.target.answer.value)
+    data.times[index] = (new Date()).getTime() - startTime
     index++
     step(index)
   })
@@ -205,19 +208,20 @@
 
   function step(index) {
     // prevent exceeds
-    if(index >= questions.length) {
+    if(index >= data.questions.length) {
       end()
       return
     }
     // reset counter and display
     startTime = (new Date()).getTime()
-    titleTag.textContent = questions[index]
+    titleTag.textContent = data.questions[index]
     form.reset()
-    counterTag.textContent = `${index+1}/${questions.length}`
+    counterTag.textContent = `${index+1}/${data.questions.length}`
   }
 
   function end() {
-    api(`score/${params.token}`, 'post', {answers, timers})
+    api(`survey/${params.token}/score`, 'post',
+        {answers: data.answers, times: data.times})
     .then(response => response.json())
     .then(result => {
       if(!result.success) {
@@ -226,13 +230,16 @@
       showPage('end')
     })
     .catch(e => {
-      showPage('error')
+      showPage('error', {error: e})
       console.error(e)
     })
   }
 
-  function showPage(id) {
+  function showPage(id, context) {
     [].forEach.call(document.querySelectorAll('[page]'), page => {
+      for(varName in context) {
+        page.innerHTML = page.innerHTML.replace(`{${varName}}`, context[varName])
+      }
       page.setAttribute('hidden', true)
     })
     document.querySelector('[page]#'+id).removeAttribute('hidden')
@@ -254,26 +261,25 @@
   function api(url, method, data) {
     return fetch(`${apiURL}/${url}`, {
       method: (method || 'get').toUpperCase(),
-      body: data,
+      body: JSON.stringify(data),
       headers: {'Content-Type': 'application/json'}
     })
   }
 
+  if(!params.token) {
+    showPage('error', {error: "A token must be provided."})
+  }
   // Retrieve survey data
-  api(`credit/survey/${params.token}`)
+  api(`survey/${params.token}/questions`)
   .then(response => response.json())
-  .then(token => {
-    if(!token.type) throw (token.error || token.message)
-    return api(`survey/${token.type}/questions`)
-  })
-  .then(response => response.json())
-  .then(questionsResponse => {
-    questions = questionsResponse
+  .then(result => {
+    if(!result.length) throw Error(result.error)
+    data.questions = result
     step(index)
     showPage('home')
   })
   .catch(e => {
-    showPage('error')
+    showPage('error', {error: e})
     console.error(e)
   })
 </script>
