@@ -2,7 +2,6 @@
 <title>TCI online</title>
 
 <link rel=stylesheet href="https://assets.tci.anthropedia.org/css/layout.css">
-<!--<link rel=stylesheet href="//localhost:8081/css/layout.css">-->
 <style>
   button {
     padding: .5em 1.2em;
@@ -165,8 +164,8 @@
 </section>
 
 <section id=error page hidden>
-  <h1>The test could not loaded</h1>
-  <p>Make sure the link provided is valid and the test has not been completed already</p>
+  <h1>The test could not load.</h1>
+  <p>Make sure the link provided is valid and the test has not been completed already.</p>
 </section>
 </main>
 
@@ -227,12 +226,20 @@
     document.querySelector('[page]#'+id).removeAttribute('hidden')
   }
 
-  // Read URL query params
-  document.location.search.substr(1).split('&').forEach(pair => {
-    [key, value] = pair.split('=')
-    params[key] = value
-  })
+  // Load showPage
 
+  // Read URL query params
+  try {
+    document.location.search.substr(1).split('&').forEach(pair => {
+      [key, value] = pair.split('=')
+      params[key] = value
+    })
+  } catch(e) {
+    console.error(e)
+    showPage('error')
+  }
+
+  // Retrieve survey data
   fetch(`${apiURL}/credit/survey/${params.token}`)
   .then(response => response.json())
   .then(token => {
