@@ -239,12 +239,16 @@
     showPage('error')
   }
 
+  function api(url) {
+    return fetch(`${apiURL}/${url}`)
+  }
+
   // Retrieve survey data
-  fetch(`${apiURL}/credit/survey/${params.token}`)
+  api(`credit/survey/${params.token}`)
   .then(response => response.json())
   .then(token => {
-    if(token.error) throw token.error
-    return fetch(`${apiURL}/survey/${token.type}/questions`)
+    if(!token.type) throw (token.error || token.message)
+    return api(`survey/${token.type}/questions`)
   })
   .then(response => response.json())
   .then(questionsResponse => {
