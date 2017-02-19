@@ -175,14 +175,12 @@
   const container = document.querySelector('#question')
   const titleTag = container.querySelector('h1')
   const counterTag = container.querySelector('#counter')
-  const tokenKey = ''
-  let surveyType = ''
   let params = {}
-  let questions = []
   let index = 0
   let startTime = 0
-  var answers = []  // const/var for 'answers' crashes webkit (bug https://bugs.webkit.org/show_bug.cgi?id=159270)  # noqa
-  const timers = []
+  let questions = []
+  var answers = []  // const/var for 'answers' crashes webkit as it matches the #answers (bug https://bugs.webkit.org/show_bug.cgi?id=159270)
+  let timers = []
   const clickDelay = 500
 
   let form = container.querySelector('form')
@@ -209,6 +207,7 @@
     // prevent exceeds
     if(index >= questions.length) {
       end()
+      return
     }
     // reset counter and display
     startTime = (new Date()).getTime()
@@ -218,11 +217,24 @@
   }
 
   function end() {
-    showPage('end')
+    api(`score/${params.token}`, 'post', {answers, timers})
+    .then(response => response.json())
+    .then(result => {
+      if(!result.success) {
+        throw Error(result.error)
+      }
+      showPage('end')
+    })
+    .catch(e => {
+      showPage('error')
+      console.error(e)
+    })
   }
 
   function showPage(id) {
-    document.querySelector('[page]').setAttribute('hidden', true)
+    [].forEach.call(document.querySelectorAll('[page]'), page => {
+      page.setAttribute('hidden', true)
+    })
     document.querySelector('[page]#'+id).removeAttribute('hidden')
   }
 
@@ -239,8 +251,12 @@
     showPage('error')
   }
 
-  function api(url) {
-    return fetch(`${apiURL}/${url}`)
+  function api(url, method, data) {
+    return fetch(`${apiURL}/${url}`, {
+      method: (method || 'get').toUpperCase(),
+      body: data,
+      headers: {'Content-Type': 'application/json'}
+    })
   }
 
   // Retrieve survey data
