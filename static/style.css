@@ -1,0 +1,118 @@
+@import url('https://assets.tci.anthropedia.org/css/layout.css');
+button {
+  padding: .5em 1.2em;
+  font-size: 1em;
+  background-color: #5a93d4;
+  color: white;
+  text-shadow: 1px 1px solid #333;
+  border: none;
+  border-radius: .2em;
+  display: block;
+  cursor: pointer;
+}
+#home {
+  text-align: center;
+}
+#home button {
+  margin: 0 auto;
+}
+#question {
+  position: relative;
+  min-height: 100px;
+}
+
+#legend {
+  display: flex;
+  padding-bottom: 2em;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 2em;
+}
+#legend li {
+  display: block;
+  width: 20%;
+  min-height: 100px;
+  text-align: center;
+  padding: .5em 1em;
+  line-height: 1.4em;
+  font-size: .9em;
+}
+#legend li span {
+  display: block;
+  text-align: center;
+  width: 35px;
+  height: 32px;
+  padding: 4px;
+  margin: 0 auto;
+  font-size: 1.1em;
+}
+
+#question h1 {
+  font-family: inherit;
+  display: inline-block;
+  width: calc(100% - 240px);
+  font-weight: normal;
+  font-size: 1.25em;
+  padding-right: 1em;
+  margin: 0;
+}
+
+#answers {
+  display: inline-block;
+  width: 235px;
+  vertical-align: top;
+  margin-top: 12px;
+}
+#answers input[type=radio] {
+  display: none;
+}
+
+#answers label,
+#legend li span {
+  text-align: center;
+  vertical-align: middle;
+  background-color: lightblue;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
+  color: white;
+  margin-bottom: .3em;
+}
+#answers label {
+  display: inline-block;
+  padding: 8px 15px;
+  transition: background-color .5s;
+  cursor: pointer;
+}
+#answers label:nth-of-type(1),
+#legend li:nth-of-type(1) span {
+  background-color: #9df;
+}
+#answers label:nth-of-type(2),
+#legend li:nth-of-type(2) span {
+  background-color: #8ce;
+}
+#answers label:nth-of-type(3),
+#legend li:nth-of-type(3) span {
+  background-color: #7bd;
+}
+#answers label:nth-of-type(4),
+#legend li:nth-of-type(4) span {
+  background-color: #6ac;
+}
+#answers label:nth-of-type(5),
+#legend li:nth-of-type(5) span {
+  background-color: #59b;
+}
+#answers label:hover {
+  background-color: #4b5;
+}
+#counter {
+  position: absolute;
+  top: 70px;
+  right: 10px;
+  font-size: .9em;
+  text-align: right;
+  font-style: italic;
+}
+[hidden] {
+  display: none !important;
+}
