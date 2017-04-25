@@ -1,1 +1,3 @@
+-e git+ssh://bitbucket.org/anthropedia/tci-database.git#egg=tci-database
+
 Flask==0.12
