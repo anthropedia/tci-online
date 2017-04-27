@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from tcidatabase.models import Token
 from tcidatabase import db
 from tcidata import get_tci

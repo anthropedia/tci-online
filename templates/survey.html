@@ -19,8 +19,10 @@
     </form>
     <div id=counter></div>
   </section>
-  <form method=post action={{ url_for('end') }} class=incomplete><button
-    type=submit>Submit</button></form>
+  <form method=post action={{ url_for('end') }} id=submitter>
+    <input name=times type=hidden>
+    <input name=answers type=hidden>
+  </form>
 </section>
 <script>
   const questions = {{ questions|safe }}
@@ -38,8 +40,7 @@
   function step(index) {
     // prevent exceeds
     if(index >= questions.length) {
-      end()
-      return
+      return end()
     }
     // reset counter and display
     startTime = (new Date()).getTime()
@@ -52,8 +53,7 @@
   ;[].map.call(document.querySelectorAll('#answers [type=radio]'), (answer, i) => {
     answer.addEventListener('change', event => {
       if((new Date()).getTime() - startTime < clickDelay) {
-        form.reset()
-        return
+        return form.reset()
       }
       form.dispatchEvent(new Event('next'))
     })
@@ -67,8 +67,14 @@
   })
 
   function end() {
-    console.info('Form is complete')
-    document.querySelector('.incomplete').classList.remove('incomplete')
+    document.querySelector('[name=times]').value = times;
+    document.querySelector('[name=answers]').value = answers;
+    const submitter = document.querySelector('#submitter')
+    return submitter.submit()
   }
+
+  form.addEventListener('submit', event => {
+    event.preventDefault()
+  }, false)
 </script>
 {% endblock %}
