@@ -22,6 +22,7 @@
   <form method=post action={{ url_for('end') }} id=submitter>
     <input name=times type=hidden>
     <input name=answers type=hidden>
+    <input name=token type=hidden>
   </form>
 </section>
 <script>
@@ -36,18 +37,6 @@
   let times = []
 
   step(index)
-
-  function step(index) {
-    // prevent exceeds
-    if(index >= questions.length) {
-      return end()
-    }
-    // reset counter and display
-    startTime = (new Date()).getTime()
-    titleTag.textContent = questions[index]
-    form.reset()
-    counterTag.textContent = `${index+1}/${questions.length}`
-  }
 
   // Click answer to submit
   ;[].map.call(document.querySelectorAll('#answers [type=radio]'), (answer, i) => {
@@ -66,15 +55,28 @@
     step(index)
   })
 
-  function end() {
-    document.querySelector('[name=times]').value = times;
-    document.querySelector('[name=answers]').value = answers;
-    const submitter = document.querySelector('#submitter')
-    return submitter.submit()
-  }
-
   form.addEventListener('submit', event => {
     event.preventDefault()
   }, false)
+
+  function step(index) {
+    // prevent exceeds
+    if(index >= questions.length) {
+      return end()
+    }
+    // reset counter and display
+    startTime = (new Date()).getTime()
+    titleTag.textContent = questions[index]
+    form.reset()
+    counterTag.textContent = `${index+1}/${questions.length}`
+  }
+
+  function end() {
+    document.querySelector('[name=times]').value = times
+    document.querySelector('[name=answers]').value = answers
+    document.querySelector('[name=token]').value = '{{ token }}'
+    const submitter = document.querySelector('#submitter')
+    return submitter.submit()
+  }
 </script>
 {% endblock %}
