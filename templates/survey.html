@@ -19,7 +19,56 @@
     </form>
     <div id=counter></div>
   </section>
-  <form method=post action={{ url_for('end') }}><button
+  <form method=post action={{ url_for('end') }} class=incomplete><button
     type=submit>Submit</button></form>
 </section>
+<script>
+  const questions = {{ questions|safe }}
+  const container = document.querySelector('#question')
+  const titleTag = container.querySelector('h1')
+  const form = container.querySelector('form')
+  const counterTag = container.querySelector('#counter')
+  const clickDelay = 500
+  let index = 0
+  let answers = []
+  let times = []
+
+  step(index)
+
+  function step(index) {
+    // prevent exceeds
+    if(index >= questions.length) {
+      end()
+      return
+    }
+    // reset counter and display
+    startTime = (new Date()).getTime()
+    titleTag.textContent = questions[index]
+    form.reset()
+    counterTag.textContent = `${index+1}/${questions.length}`
+  }
+
+  // Click answer to submit
+  ;[].map.call(document.querySelectorAll('#answers [type=radio]'), (answer, i) => {
+    answer.addEventListener('change', event => {
+      if((new Date()).getTime() - startTime < clickDelay) {
+        form.reset()
+        return
+      }
+      form.dispatchEvent(new Event('next'))
+    })
+  })
+
+  form.addEventListener('next', event => {
+    answers[index] = Number(event.target.answer.value)
+    times[index] = (new Date()).getTime() - startTime
+    index++
+    step(index)
+  })
+
+  function end() {
+    console.info('Form is complete')
+    document.querySelector('.incomplete').classList.remove('incomplete')
+  }
+</script>
 {% endblock %}
