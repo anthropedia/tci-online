@@ -17,10 +17,10 @@ def home():
 @app.route('/<string:token>')
 def survey(token):
     try:
-        Token.objects.get(key=token, usage_date=None)
+        token_object = Token.objects.get(key=token, usage_date=None)
     except Token.DoesNotExist:
         return render_template('error.html')
-    tci = get_tci('tcims')
+    tci = get_tci(token_object.survey)
     questions = tci.get('questions')
     return render_template('survey.html', questions=questions, token=token)
 
