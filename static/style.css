@@ -113,6 +113,3 @@ button {
   text-align: right;
   font-style: italic;
 }
-.incomplete button {
-  display: none;
-}

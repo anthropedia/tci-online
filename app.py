@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from tcidatabase.models import Token
 from tcidatabase import db
 from tcidata import get_tci
@@ -17,7 +17,7 @@ def home():
 @app.route('/<string:token>')
 def survey(token):
     try:
-        verify_token = Token.objects.get(key=token, usage_date=None)
+        Token.objects.get(key=token, usage_date=None)
     except Token.DoesNotExist:
         return render_template('error.html')
     tci = get_tci('tcims')
