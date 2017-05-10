@@ -3,9 +3,13 @@ import os
 from flask import Flask
 from tcidatabase import db
 
-app = Flask(__name__)
-app.debug = True
-app.root_path = os.path.dirname(__file__) + '/..'
+PROJECT_PATH = os.path.abspath(os.path.dirname(__file__) + '/..')
+os.environ.setdefault('SETTINGS', PROJECT_PATH + '/settings.py')
 
-db.connect(db='tci_test', username='', password='', host='localhost',
-           port=27017)
+app = Flask('tci-online')
+app.config.from_envvar('SETTINGS')
+
+app.root_path = PROJECT_PATH
+app.secret_key = app.config['SECRET_KEY']
+
+db.connect(**app.config['DATABASE'])
