@@ -78,7 +78,8 @@ button {
 }
 #answers label {
   display: inline-block;
-  padding: 8px 15px;
+  padding: 5px 25px 6px 14px;
+  margin-right: 3px;
   transition: background-color .5s;
   cursor: pointer;
 }
@@ -101,6 +102,9 @@ button {
 #answers label:nth-of-type(5),
 #legend li:nth-of-type(5) span {
   background-color: #59b;
+}
+#answers label:last-child {
+  margin-right: 0;
 }
 #answers label:hover {
   background-color: #4b5;
