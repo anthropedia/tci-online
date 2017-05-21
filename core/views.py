@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, abort
 from tcidatabase.models import SurveyToken, Score
 from tcidata import get_tci
 
@@ -13,10 +13,14 @@ def home():
 @app.route('/<string:token>')
 def survey(token):
     try:
-        SurveyToken.objects.get(key=token, usage_date=None)
+        token = SurveyToken.objects.get(key=token, usage_date=None)
     except SurveyToken.DoesNotExist:
         return render_template('error.html'), 401
-    tci = get_tci('tcims')
+    try:
+        tci = get_tci(token.survey)
+    except NotImplementedError:
+        abort(501, 'The token has a inexisting "{}" survey associated.'.format(
+              token.survey))
     questions = tci.get('questions')
     return render_template('survey.html', questions=questions, token=token)
 
