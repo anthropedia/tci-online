@@ -30,7 +30,7 @@ def end():
     token = SurveyToken.objects.get(key=request.form.get('token'))
     answers = [int(a) for a in request.form.get('answers').split(',')]
     times = [int(t) for t in request.form.get('times').split(',')]
-    Score(user=token.user, answers=answers, times=times,
+    Score(client=token.client, answers=answers, times=times,
           survey=token.survey).save()
     token.void()
     return render_template('end.html')
