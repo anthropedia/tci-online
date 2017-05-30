@@ -1,6 +1,22 @@
 {% extends 'layout.html' %}
 {% block main %}
-<section>
+<section id=begin>
+  <h2>Instructions</h2>
+  <p>For each sentence, choose the right answer that describe the best way
+    your usual way to act or feel</p>
+  <p>There is 5 answers for each questions</p>
+  <ul id=legend>
+    <li><span>1</span>Definitely false</li>
+    <li><span>2</span>Mostly or Probably False</li>
+    <li><span>3</span>Neither true nor false, or about the same</li>
+    <li><span>4</span>Mostly or Probably True</li>
+    <li><span>5</span>Definitely True</li>
+  </ul>
+  <p>Read attentively</p>
+  <button id=begin_button onclick=showSurvey()>Begin test</button>
+</section>
+
+<section id=survey hidden>
   <ul id=legend>
     <li><span>1</span>Definitely false</li>
     <li><span>2</span>Mostly or Probably False</li>
@@ -35,6 +51,11 @@
   let index = 0
   let answers = []
   let times = []
+
+  function showSurvey() {
+    document.querySelector('#begin').style.display = 'none'
+    document.querySelector('#survey').removeAttribute('hidden')
+  }
 
   step(index)
 

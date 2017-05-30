@@ -120,3 +120,6 @@ button {
 .incomplete button {
   display: none;
 }
+#begin_button {
+  margin: 0 auto;
+}
