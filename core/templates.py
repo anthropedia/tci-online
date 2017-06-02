@@ -1,5 +1,7 @@
-from flask import request
+from flask import request, Markup
 from tcii18n.template import flask_methods
+
+import gfm
 
 from . import app
 
@@ -11,3 +13,8 @@ def get_translations_file():
     return app.config.get('TRANSLATION_FILES').get(lang)
 
 flask_methods(app, get_translations_file)
+
+
+@app.template_filter('markdown')
+def markdown_filter(string):
+    return Markup(gfm.markdown(gfm.gfm(string)))
