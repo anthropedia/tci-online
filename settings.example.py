@@ -15,3 +15,4 @@ TRANSLATION_FILES = {
     'fr': '/path/to/my/transfile.fr.csv',
     'sv': '/path/to/my/transfile.sv.csv',
 }
+DEFAULT_LANGUAGE = 'en'
