@@ -1,5 +1,5 @@
 from unittest import TestCase
-from tcidatabase.models import User, Token, Score
+from tcidatabase.models import User, SurveyToken, Client, Score
 
 from core import app, db
 from core.views import *
@@ -7,11 +7,17 @@ from core.views import *
 
 class TciTest(TestCase):
     def setUp(self):
-        self.token = Token(user=User().save(), survey='tcims').save()
+        provider = User(email='user@test.net').save()
+        client = Client(provider=provider, lastname='Jack').save()
+        self.token = SurveyToken(client=client, provider=provider,
+                                 survey='tcims').save()
         self.client = app.test_client()
         self.client.testing = True
 
     def tearDown(self):
+        User.objects.first().delete()
+        Client.objects.first().delete()
+        SurveyToken.objects.first().delete()
         database = db.connection.get_connection()
         database.drop_database('tci_test')
 
@@ -35,14 +41,15 @@ class TciTest(TestCase):
         self.assertEqual(Score.objects.count(), 0)
         result = self.client.post('/end', data=data)
         self.assertEqual(result.status_code, 200)
-        self.assertIn(b'You have completed', result.data)
+        self.assertIn(b'Thank you for completing the test.', result.data)
         self.assertEqual(Score.objects.count(), 1)
         score = Score.objects.first()
+        Score.objects.first().delete()
         self.assertEqual(score.answers, [2, 3, 4])
         self.assertEqual(score.times, [1000, 1500, 1600])
         self.assertEqual(score.survey, 'tcims')
-        token = Token.objects.first()
-        self.assertEqual(score.user, token.user)
+        token = SurveyToken.objects.first()
+        self.assertEqual(score.client.email, token.client.email)
         self.assertFalse(token.is_valid)
 
     def test_run_tci_with_page_reload(self):
