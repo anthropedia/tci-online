@@ -9,3 +9,9 @@ DATABASE = {
   'host': 'localhost',
   'port': 27017,
 }
+
+TRANSLATION_FILES = {
+    'en': '/path/to/my/transfile.en.csv',
+    'fr': '/path/to/my/transfile.fr.csv',
+    'sv': '/path/to/my/transfile.sv.csv',
+}

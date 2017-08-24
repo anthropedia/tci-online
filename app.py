@@ -1,5 +1,5 @@
 from core import app
-from core.views import *
+from core import views, templates  # noqa: F401
 
 
 # WSGI
