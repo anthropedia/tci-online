@@ -3,5 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": {},
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "nightmare": "^2.10.0",
+    "vo": "^4.0.2"
+  }
 }
